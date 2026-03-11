@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Build outputs
+/dist/
+/build/
+/Api/dist/
+/Api/build/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+/coverage/
+
+# OS metadata
+.DS_Store
+Thumbs.db
