@@ -11,10 +11,10 @@ describe('Test user entity', () => {
         const userRole = new UserRole('admin');
         const user = new User(userId, userEmail, 'name', userRole);
         expect(user).toBeInstanceOf(User);
-        expect(user.id).toBe(userId);
+        expect(user.userId).toBe(userId);
         expect(user.email).toBe(userEmail);
         expect(user.role).toBe(userRole);
-        expect(user.name).toBe('name');
+        expect(user.userName).toBe('name');
     });
 
     it('should change the name of the user', () => {
@@ -22,8 +22,8 @@ describe('Test user entity', () => {
         const userEmail = new UserEmail('mail@mail.com');
         const userRole = new UserRole('admin');
         const user = new User(userId, userEmail, 'name', userRole);
-        user.name = 'new name';
-        expect(user.name).toBe('new name');
+        user.userName = 'new name';
+        expect(user.userName).toBe('new name');
     });
 
     it('should change the role of the user', () => {

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { type Request, type Response, type NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./user/infrastructure/user.router.js";
@@ -18,6 +19,8 @@ app.use((err: unknown, _: Request, res: Response, __: NextFunction) => {
     return res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(5000, () => {
-    console.log("Server is running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

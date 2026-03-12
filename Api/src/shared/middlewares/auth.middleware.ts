@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { JwtService } from "../services/jwt.service.js";
+import { JwtService } from "../../auth/infrastructure/services/jwt.service.js";
 
 const jwtService = new JwtService();
 
@@ -23,6 +23,8 @@ export const authMiddleware = (allowedRoles: string[] = []) => {
             res.status(403).json({ error: "Forbidden" });
             return;
         }
+
+        (req as any).userId = payload.userId;
 
         next();
     };

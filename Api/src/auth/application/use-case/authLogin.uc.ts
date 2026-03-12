@@ -15,7 +15,7 @@ export class AuthLogin {
         if (!user) throw new InvalidCredentialsError();
 
         const payload = {
-            id: user.id.value,
+            userId: user.userId.value,
             email: user.email.value,
             role: user.role.value
         };

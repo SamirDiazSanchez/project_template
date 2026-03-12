@@ -6,7 +6,7 @@ export class UserListAll {
         private readonly userRepository: IUserRepository
     ) { }
 
-    async run(): Promise<User[]> {
-        return await this.userRepository.listAll();
+    async run(pageNumber: number, pageSize: number): Promise<User[]> {
+        return await this.userRepository.listAll(pageNumber, pageSize);
     }
 }

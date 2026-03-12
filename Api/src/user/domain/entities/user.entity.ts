@@ -7,9 +7,9 @@ export class User {
     public isActive?: boolean
 
     constructor(
-        public readonly id: UserId,
+        public readonly userId: UserId,
         public readonly email: UserEmail,
-        public name: string,
+        public userName: string,
         public role: UserRole
     ) { }
 
