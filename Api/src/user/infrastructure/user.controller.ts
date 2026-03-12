@@ -4,14 +4,16 @@ import { UserServiceContainer } from "@/user/infrastructure/userServiceContainer
 import type { Request, Response, NextFunction } from "express";
 
 export class UserController {
-    async listAll(_: Request, res: Response, __: NextFunction) {
+    async listAll(req: Request, res: Response, __: NextFunction) {
         try {
-            const users = await UserServiceContainer.listAll.run();
+            const pageNumber = parseInt(req.params.pageNumber as string) || 1;
+            const pageSize = parseInt(req.params.pageSize as string) || 10;
+            const users = await UserServiceContainer.listAll.run(pageNumber, pageSize);
             if (users.length === 0) {
                 res.status(404).json({ error: "User not found" });
                 return;
             }
-            res.status(200).json(users.map(user => ({ id: user.id.value, name: user.name, email: user.email.value, role: user.role.value })));
+            res.status(200).json(users.map(user => ({ id: user.userId.value, name: user.userName, email: user.email.value, role: user.role.value })));
         } catch (error) {
             if (error instanceof UserNotFoundError) return res.status(404).json({ error: "User not found" });
 
@@ -28,7 +30,7 @@ export class UserController {
 
         try {
             const user = await UserServiceContainer.findById.run(_id);
-            res.status(200).json({ id: user.id.value, name: user.name, email: user.email.value, role: user.role.value });
+            res.status(200).json({ id: user.userId.value, name: user.userName, email: user.email.value, role: user.role.value });
         } catch (error) {
             if (error instanceof UserNotFoundError) return res.status(404).json({ error: "User not found" });
 
@@ -45,7 +47,7 @@ export class UserController {
 
         try {
             const user = await UserServiceContainer.findByEmail.run(email);
-            res.status(200).json({ id: user.id.value, name: user.name, email: user.email.value, role: user.role.value });
+            res.status(200).json({ id: user.userId.value, name: user.userName, email: user.email.value, role: user.role.value });
         } catch (error) {
             if (error instanceof UserNotFoundError) return res.status(404).json({ error: "User not found" });
 
@@ -59,7 +61,7 @@ export class UserController {
             return;
         }
 
-        const recorderId = UserId.create().value;
+        const recorderId = (req as any).userId;
 
         try {
             await UserServiceContainer.save.run(req.body.name, req.body.email, req.body.role, recorderId);
@@ -76,7 +78,7 @@ export class UserController {
             return;
         }
 
-        const recorderId = UserId.create().value;
+        const recorderId = (req as any).userId;
 
         try {
             await UserServiceContainer.remove.run(_id, recorderId);

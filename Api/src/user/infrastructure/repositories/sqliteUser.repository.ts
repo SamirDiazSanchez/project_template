@@ -16,9 +16,9 @@ export class SqliteUserRepository implements IUserRepository {
     private init(): void {
         const createTableQuery = `
             CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
+                userId TEXT PRIMARY KEY,
                 email TEXT UNIQUE NOT NULL,
-                name TEXT NOT NULL,
+                userName TEXT NOT NULL,
                 role TEXT NOT NULL,
                 isActive INTEGER DEFAULT 1,
                 createdBy TEXT,
@@ -33,11 +33,11 @@ export class SqliteUserRepository implements IUserRepository {
     async save(user: User): Promise<void> {
         try {
             const stmt = this.db.prepare(`
-            INSERT INTO users (id, email, name, role, isActive, createdBy, createdAt, updatedBy, updatedAt)
+            INSERT INTO users (userId, email, userName, role, isActive, createdBy, createdAt, updatedBy, updatedAt)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET
+            ON CONFLICT(userId) DO UPDATE SET
                 email = excluded.email,
-                name = excluded.name,
+                userName = excluded.userName,
                 role = excluded.role,
                 isActive = excluded.isActive,
                 createdBy = excluded.createdBy,
@@ -47,9 +47,9 @@ export class SqliteUserRepository implements IUserRepository {
         `);
 
             stmt.run(
-                user.id.value,
+                user.userId.value,
                 user.email.value,
-                user.name,
+                user.userName,
                 user.role.value,
                 user.isActive ? 1 : 0,
                 user.recorderId?.value || null,
@@ -63,7 +63,7 @@ export class SqliteUserRepository implements IUserRepository {
     }
 
     async findById(id: string): Promise<User | null> {
-        const stmt = this.db.prepare(`SELECT * FROM users WHERE id = ?`);
+        const stmt = this.db.prepare(`SELECT * FROM users WHERE userId = ?`);
         const row = stmt.get(id) as any;
 
         if (!row) return null;
@@ -88,19 +88,19 @@ export class SqliteUserRepository implements IUserRepository {
     }
 
     async remove(id: string): Promise<void> {
-        const stmt = this.db.prepare(`UPDATE users SET isActive = 0 WHERE id = ?`);
+        const stmt = this.db.prepare(`UPDATE users SET isActive = 0 WHERE userId = ?`);
         stmt.run(id);
     }
 
     private mapToUser(row: any): User {
         const user = new User(
-            new UserId(row.id),
+            new UserId(row.userId),
             new UserEmail(row.email),
-            row.name,
+            row.userName,
             new UserRole(row.role)
         );
 
-        if (row.recorder_id) user.setRecordId(new UserId(row.recorder_id));
+        if (row.recorderId) user.setRecordId(new UserId(row.recorderId));
 
         return user;
     }

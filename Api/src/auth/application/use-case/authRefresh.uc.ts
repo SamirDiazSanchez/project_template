@@ -6,22 +6,22 @@ export class AuthRefresh {
 
     async run(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
         const payload = this.jwtService.verifyRefresh(refreshToken) as any;
-        if (!payload || !payload.id || !payload.email || !payload.role) {
+        if (!payload || !payload.userId || !payload.email || !payload.role) {
             throw new InvalidCredentialsError();
         }
 
         const newPayload = {
-            id: payload.id,
+            userId: payload.userId,
             email: payload.email,
             role: payload.role
         };
 
         const newAccessToken = this.jwtService.sign(newPayload);
         const newRefreshToken = this.jwtService.signRefresh(newPayload);
-        
-        return { 
-            accessToken: newAccessToken, 
-            refreshToken: newRefreshToken 
+
+        return {
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
         };
     }
 }

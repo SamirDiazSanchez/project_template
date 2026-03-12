@@ -9,7 +9,7 @@ export class InMemoryUserRepository implements IUserRepository {
     }
 
     async findById(id: string): Promise<User | null> {
-        return this.users.find(user => user.id.value === id) || null;
+        return this.users.find(user => user.userId.value === id) || null;
     }
 
     async findByEmail(email: string): Promise<User | null> {
@@ -21,6 +21,6 @@ export class InMemoryUserRepository implements IUserRepository {
     }
 
     async remove(id: string): Promise<void> {
-        this.users = this.users.filter(user => user.id.value !== id);
+        this.users = this.users.filter(user => user.userId.value !== id);
     }
 }
