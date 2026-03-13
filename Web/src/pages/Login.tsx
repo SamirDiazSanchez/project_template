@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api.service';
+import api from '../shared/infrastructure/services/api.service';
 import { Lock, Mail, Loader2 } from 'lucide-react';
 import { useAuth } from '../shared/infrastructure/contexts/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
-import { cryptoService } from '../shared/infrastructure/services/aes-crypto.service';
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -19,8 +18,7 @@ const Login: React.FC = () => {
     setError('');
     try {
       const response = await api.post('/auth/login', { email });
-      const decryptedRole = cryptoService.decrypt(response.data.role);
-      login(decryptedRole);
+      login(response.data.role);
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Invalid credentials');
@@ -35,8 +33,7 @@ const Login: React.FC = () => {
     try {
       const { credential } = response;
       const res = await api.post('/auth/google', { idToken: credential });
-      const decryptedRole = cryptoService.decrypt(res.data.role);
-      login(decryptedRole);
+      login(res.data.role);
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Google login failed');

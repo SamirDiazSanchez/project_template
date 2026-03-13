@@ -1,4 +1,4 @@
-import axiosInstance from "../../../services/api.service.ts";
+import axiosInstance from "../../../shared/infrastructure/services/api.service.ts";
 import { User } from "../domain/entities/user.entity.ts";
 import type { PaginatedUsers } from "../domain/entities/user.entity.ts";
 import type { UserRepository } from "../domain/repositories/user.repository.ts";

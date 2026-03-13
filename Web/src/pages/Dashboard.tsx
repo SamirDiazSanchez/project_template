@@ -1,7 +1,7 @@
 import { Users } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUsers } from '../hooks/useUsers';
+import { useUsers } from '../modules/user/presentation/hooks/useUsers';
 import { useAuth } from '../shared/infrastructure/contexts/AuthContext';
 
 const Dashboard: React.FC = () => {

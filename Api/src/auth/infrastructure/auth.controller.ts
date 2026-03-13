@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthServiceContainer } from "./authServiceContainer.js";
 import { InvalidCredentialsError } from "@/auth/domain/errors/invalidCredentials.error.js";
-import { AESCryptoService } from "../../shared/infrastructure/services/aes-crypto.service.js";
+import { CookieSessionService } from "../../shared/infrastructure/services/cookie-session.service.js";
 
-const cryptoService = new AESCryptoService();
+const sessionService = new CookieSessionService();
 
 export class AuthController {
     async login(req: Request, res: Response, _: NextFunction) {
@@ -15,25 +15,13 @@ export class AuthController {
         try {
             const { accessToken, refreshToken, role } = await AuthServiceContainer.login.run(req.body.email);
 
-            const encryptedAccessToken = cryptoService.encrypt(accessToken);
-            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+            sessionService.setSession(res, "token", accessToken, { maxAge: 1000 * 60 * 5 });
+            sessionService.setSession(res, "refreshToken", refreshToken, { maxAge: 1000 * 60 * 15 });
 
-            res.cookie("token", encryptedAccessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 5
-            });
-            res.cookie("refreshToken", encryptedRefreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 15
-            });
-            res.status(200).json({ role: cryptoService.encrypt(role) });
+            res.status(200).json({ role });
         } catch (error) {
             if (error instanceof InvalidCredentialsError) {
-                res.status(401).json({ error: "Invalid credentials" });
+                res.status(401).json({ error: "Authentication failed" });
                 return;
             }
             throw error;
@@ -49,25 +37,13 @@ export class AuthController {
         try {
             const { accessToken, refreshToken, role } = await AuthServiceContainer.googleLogin.run(req.body.idToken);
 
-            const encryptedAccessToken = cryptoService.encrypt(accessToken);
-            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+            sessionService.setSession(res, "token", accessToken, { maxAge: 1000 * 60 * 5 });
+            sessionService.setSession(res, "refreshToken", refreshToken, { maxAge: 1000 * 60 * 15 });
 
-            res.cookie("token", encryptedAccessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 5
-            });
-            res.cookie("refreshToken", encryptedRefreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 15
-            });
-            res.status(200).json({ role: cryptoService.encrypt(role) });
+            res.status(200).json({ role });
         } catch (error) {
             if (error instanceof InvalidCredentialsError) {
-                res.status(401).json({ error: "Invalid Google token or account not linked" });
+                res.status(401).json({ error: "Authentication failed" });
                 return;
             }
             throw error;
@@ -75,36 +51,23 @@ export class AuthController {
     }
 
     async refresh(req: Request, res: Response, _: NextFunction) {
-        const refreshTokenCookie = req.cookies.refreshToken;
+        const refreshToken = sessionService.getSession(req, "refreshToken");
 
-        if (!refreshTokenCookie) {
+        if (!refreshToken) {
             res.status(401).json({ error: "No refresh token provided" });
             return;
         }
 
         try {
-            const decryptedRefreshToken = cryptoService.decrypt(refreshTokenCookie);
-            const { accessToken, refreshToken } = await AuthServiceContainer.refresh.run(decryptedRefreshToken);
+            const { accessToken, refreshToken: newRefreshToken } = await AuthServiceContainer.refresh.run(refreshToken);
 
-            const encryptedAccessToken = cryptoService.encrypt(accessToken);
-            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+            sessionService.setSession(res, "token", accessToken, { maxAge: 1000 * 60 * 5 });
+            sessionService.setSession(res, "refreshToken", newRefreshToken, { maxAge: 1000 * 60 * 15 });
 
-            res.cookie("token", encryptedAccessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 5
-            });
-            res.cookie("refreshToken", encryptedRefreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 1000 * 60 * 15
-            });
             res.status(200).json({ message: "Token refreshed successfully" });
         } catch (error) {
             if (error instanceof InvalidCredentialsError) {
-                res.status(401).json({ error: "Invalid refresh token" });
+                res.status(401).json({ error: "Authentication failed" });
                 return;
             }
             throw error;
@@ -112,8 +75,8 @@ export class AuthController {
     }
 
     async logout(_: Request, res: Response, __: NextFunction) {
-        res.clearCookie("token");
-        res.clearCookie("refreshToken");
+        sessionService.clearSession(res, "token");
+        sessionService.clearSession(res, "refreshToken");
         res.status(200).json({ message: "Logout successful" });
     }
 }

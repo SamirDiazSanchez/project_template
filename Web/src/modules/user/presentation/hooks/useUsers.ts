@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { ApiUserRepository } from '../modules/user/infrastructure/api-user.repository.ts';
-import { ListUsersUseCase } from '../modules/user/application/list-users.use-case.ts';
-import { SaveUserUseCase } from '../modules/user/application/save-user.use-case.ts';
-import { DeleteUserUseCase } from '../modules/user/application/delete-user.use-case.ts';
-import { User } from '../modules/user/domain/entities/user.entity.ts';
+import { ApiUserRepository } from '../../infrastructure/api-user.repository.ts';
+import { ListUsersUseCase } from '../../application/list-users.use-case.ts';
+import { SaveUserUseCase } from '../../application/save-user.use-case.ts';
+import { DeleteUserUseCase } from '../../application/delete-user.use-case.ts';
+import { User } from '../../domain/entities/user.entity.ts';
 
 export const useUsers = (page: number, size: number, enabled: boolean = true) => {
   const [users, setUsers] = useState<User[]>([]);

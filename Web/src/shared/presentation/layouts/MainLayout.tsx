@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogOut, Home, Users } from 'lucide-react';
 import { useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
-import instance from '../../../services/api.service.ts';
+import instance from '../../infrastructure/services/api.service.ts';
 import { useAuth } from '../../infrastructure/contexts/AuthContext';
 
 const MainLayout: React.FC = () => {
