@@ -60,7 +60,7 @@ export class SqlServerUserRepository extends SqlServerConnection implements IUse
         return this.mapToUser(row);
     }
 
-    async listAll(pageNumber: number, pageSize: number): Promise<User[]> {
+    async listAll(pageNumber: number, pageSize: number): Promise<{ users: User[], totalRecords: number }> {
         const request = this.pool!.request();
         request.input('PageNumber', sql.Int, pageNumber);
         request.input('PageSize', sql.Int, pageSize);
@@ -68,14 +68,18 @@ export class SqlServerUserRepository extends SqlServerConnection implements IUse
 
         const result = await request.execute('spSelect_User');
         const rows = result.recordset;
+        const totalRecords = result.output.TotalRecords || 0;
 
-        return rows.map((row: any) => this.mapToUser(row));
+        return {
+            users: rows.map((row: any) => this.mapToUser(row)),
+            totalRecords
+        };
     }
 
-    async remove(id: string): Promise<void> {
+    async remove(id: string, recorderId: string): Promise<void> {
         const request = this.pool!.request();
         request.input('UserId', sql.UniqueIdentifier, id);
-        request.input('RecordBy', sql.UniqueIdentifier, id);
+        request.input('RecordBy', sql.UniqueIdentifier, recorderId);
 
         request.output('StatusCode', sql.Int);
         request.output('StatusMessage', sql.VarChar(1000));
@@ -93,8 +97,10 @@ export class SqlServerUserRepository extends SqlServerConnection implements IUse
             new UserId(row.UserId),
             new UserEmail(row.Email),
             row.UserName,
-            new UserRole(row.Role)
+            new UserRole(row.Role),
         );
+
+        user.setIsActive(row.IsActive);
 
         return user;
     }

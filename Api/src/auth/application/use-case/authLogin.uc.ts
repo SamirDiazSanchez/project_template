@@ -9,7 +9,7 @@ export class AuthLogin {
         private readonly jwtService: IJwtService
     ) { }
 
-    async run(email: string): Promise<{ accessToken: string; refreshToken: string }> {
+    async run(email: string): Promise<{ accessToken: string; refreshToken: string; role: string }> {
         const userEmail = new UserEmail(email);
         const user = await this.userRepository.findByEmail(userEmail.value);
         if (!user) throw new InvalidCredentialsError();
@@ -21,6 +21,6 @@ export class AuthLogin {
         };
         const accessToken = this.jwtService.sign(payload);
         const refreshToken = this.jwtService.signRefresh(payload);
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, role: user.role.value };
     }
 }

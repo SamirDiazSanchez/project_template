@@ -4,6 +4,6 @@ export interface IUserRepository {
     save(user: User): Promise<void>;
     findById(id: string): Promise<User | null>;
     findByEmail(email: string): Promise<User | null>;
-    listAll(pageNumber: number, pageSize: number): Promise<User[]>;
+    listAll(pageNumber: number, pageSize: number): Promise<{ users: User[], totalRecords: number }>;
     remove(id: string, recorderId: string): Promise<void>;
 }

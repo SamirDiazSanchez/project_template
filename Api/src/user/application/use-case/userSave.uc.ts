@@ -10,12 +10,13 @@ export class UserSave {
     ) { }
 
     async run(
+        id: string | null,
         name: string,
         email: string,
         role: string,
         recorderId: string
     ): Promise<void> {
-        const userId = UserId.create();
+        const userId = id ? new UserId(id) : UserId.create();
         const userEmail = new UserEmail(email);
         const userRecorderId = new UserId(recorderId);
         const userRole = new UserRole(role);

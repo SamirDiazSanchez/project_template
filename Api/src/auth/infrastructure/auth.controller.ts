@@ -1,6 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthServiceContainer } from "./authServiceContainer.js";
 import { InvalidCredentialsError } from "@/auth/domain/errors/invalidCredentials.error.js";
+import { AESCryptoService } from "../../shared/infrastructure/services/aes-crypto.service.js";
+
+const cryptoService = new AESCryptoService();
 
 export class AuthController {
     async login(req: Request, res: Response, _: NextFunction) {
@@ -10,23 +13,61 @@ export class AuthController {
         }
 
         try {
-            const { accessToken, refreshToken } = await AuthServiceContainer.login.run(req.body.email);
-            res.cookie("token", accessToken, {
+            const { accessToken, refreshToken, role } = await AuthServiceContainer.login.run(req.body.email);
+
+            const encryptedAccessToken = cryptoService.encrypt(accessToken);
+            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+
+            res.cookie("token", encryptedAccessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 5
             });
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", encryptedRefreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 15
             });
-            res.status(200).json({ message: "Login successful" });
+            res.status(200).json({ role: cryptoService.encrypt(role) });
         } catch (error) {
             if (error instanceof InvalidCredentialsError) {
                 res.status(401).json({ error: "Invalid credentials" });
+                return;
+            }
+            throw error;
+        }
+    }
+
+    async googleLogin(req: Request, res: Response, _: NextFunction) {
+        if (!req.body || !req.body.idToken) {
+            res.status(400).json({ error: "Parameter idToken is required" });
+            return;
+        }
+
+        try {
+            const { accessToken, refreshToken, role } = await AuthServiceContainer.googleLogin.run(req.body.idToken);
+
+            const encryptedAccessToken = cryptoService.encrypt(accessToken);
+            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+
+            res.cookie("token", encryptedAccessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 5
+            });
+            res.cookie("refreshToken", encryptedRefreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 15
+            });
+            res.status(200).json({ role: cryptoService.encrypt(role) });
+        } catch (error) {
+            if (error instanceof InvalidCredentialsError) {
+                res.status(401).json({ error: "Invalid Google token or account not linked" });
                 return;
             }
             throw error;
@@ -42,14 +83,19 @@ export class AuthController {
         }
 
         try {
-            const { accessToken, refreshToken } = await AuthServiceContainer.refresh.run(refreshTokenCookie);
-            res.cookie("token", accessToken, {
+            const decryptedRefreshToken = cryptoService.decrypt(refreshTokenCookie);
+            const { accessToken, refreshToken } = await AuthServiceContainer.refresh.run(decryptedRefreshToken);
+
+            const encryptedAccessToken = cryptoService.encrypt(accessToken);
+            const encryptedRefreshToken = cryptoService.encrypt(refreshToken);
+
+            res.cookie("token", encryptedAccessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 5
             });
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", encryptedRefreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
@@ -63,5 +109,11 @@ export class AuthController {
             }
             throw error;
         }
+    }
+
+    async logout(_: Request, res: Response, __: NextFunction) {
+        res.clearCookie("token");
+        res.clearCookie("refreshToken");
+        res.status(200).json({ message: "Logout successful" });
     }
 }
