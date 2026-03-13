@@ -1,17 +1,20 @@
 import type { Request, Response, NextFunction } from "express";
 import { JwtService } from "../../auth/infrastructure/services/jwt.service.js";
+import { AESCryptoService } from "../infrastructure/services/aes-crypto.service.js";
 
 const jwtService = new JwtService();
+const cryptoService = new AESCryptoService();
 
 export const authMiddleware = (allowedRoles: string[] = []) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const token = req.cookies.token;
+        const encryptedToken = req.cookies.token;
 
-        if (!token) {
+        if (!encryptedToken) {
             res.status(401).json({ error: "No token provided" });
             return;
         }
 
+        const token = cryptoService.decrypt(encryptedToken);
         const payload = jwtService.verify(token) as any;
 
         if (!payload) {

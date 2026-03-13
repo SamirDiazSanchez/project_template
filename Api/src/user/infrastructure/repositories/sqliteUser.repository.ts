@@ -80,16 +80,23 @@ export class SqliteUserRepository implements IUserRepository {
         return this.mapToUser(row);
     }
 
-    async listAll(): Promise<User[]> {
-        const stmt = this.db.prepare(`SELECT * FROM users`);
-        const rows = stmt.all() as any[];
+    async listAll(pageNumber: number, pageSize: number): Promise<{ users: User[], totalRecords: number }> {
+        const stmt = this.db.prepare(`SELECT * FROM users LIMIT ? OFFSET ?`);
+        const offset = (pageNumber - 1) * pageSize;
+        const rows = stmt.all(pageSize, offset) as any[];
 
-        return rows.map(row => this.mapToUser(row));
+        const totalStmt = this.db.prepare(`SELECT COUNT(*) as total FROM users`);
+        const total = (totalStmt.get() as any).total;
+
+        return {
+            users: rows.map(row => this.mapToUser(row)),
+            totalRecords: total
+        };
     }
 
-    async remove(id: string): Promise<void> {
-        const stmt = this.db.prepare(`UPDATE users SET isActive = 0 WHERE userId = ?`);
-        stmt.run(id);
+    async remove(id: string, recorderId: string): Promise<void> {
+        const stmt = this.db.prepare(`UPDATE users SET isActive = 0, updatedBy = ? WHERE userId = ?`);
+        stmt.run(recorderId, id);
     }
 
     private mapToUser(row: any): User {

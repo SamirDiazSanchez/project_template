@@ -11,6 +11,4 @@ userRouter.get("/user/:email", authMiddleware(["admin"]), userController.findByE
 userRouter.post("/user", authMiddleware(["admin"]), userController.save);
 userRouter.delete("/user/:id", authMiddleware(["admin"]), userController.remove);
 
-export {
-    userRouter
-}
+export { userRouter }
