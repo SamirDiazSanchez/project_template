@@ -1,20 +1,19 @@
 import type { Request, Response, NextFunction } from "express";
 import { JwtService } from "../../auth/infrastructure/services/jwt.service.js";
-import { AESCryptoService } from "../infrastructure/services/aes-crypto.service.js";
+import { CookieSessionService } from "../infrastructure/services/cookie-session.service.js";
 
 const jwtService = new JwtService();
-const cryptoService = new AESCryptoService();
+const sessionService = new CookieSessionService();
 
 export const authMiddleware = (allowedRoles: string[] = []) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const encryptedToken = req.cookies.token;
+        const token = sessionService.getSession(req, "token");
 
-        if (!encryptedToken) {
+        if (!token) {
             res.status(401).json({ error: "No token provided" });
             return;
         }
 
-        const token = cryptoService.decrypt(encryptedToken);
         const payload = jwtService.verify(token) as any;
 
         if (!payload) {
@@ -32,3 +31,4 @@ export const authMiddleware = (allowedRoles: string[] = []) => {
         next();
     };
 };
+

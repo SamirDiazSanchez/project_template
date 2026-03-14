@@ -1,0 +1,50 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run API",
+            "cwd": "${workspaceFolder}/Api",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "console": "integratedTerminal",
+            "restart": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run Web",
+            "cwd": "${workspaceFolder}/Web",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "console": "integratedTerminal",
+            "restart": true
+        },
+        {
+            "type": "msedge",
+            "name": "Debug Web (Edge)",
+            "request": "launch",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/Web"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "API + Web",
+            "configurations": [
+                "Run API",
+                "Run Web"
+            ]
+        }
+    ]
+}
