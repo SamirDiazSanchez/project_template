@@ -16,8 +16,13 @@ export class InMemoryUserRepository implements IUserRepository {
         return this.users.find(user => user.email.value === email) || null;
     }
 
-    async listAll(): Promise<User[]> {
-        return this.users;
+    async listAll(pageNumber: number, pageSize: number): Promise<{ users: User[]; totalRecords: number; }> {
+        const skip = (pageNumber - 1) * pageSize;
+        const users = this.users.slice(skip, skip + pageSize);
+        return {
+            users,
+            totalRecords: this.users.length
+        };
     }
 
     async remove(id: string): Promise<void> {

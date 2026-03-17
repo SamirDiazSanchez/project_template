@@ -1,4 +1,4 @@
-import Router from "express";
+import { Router } from "express";
 import { AuthController } from "./auth.controller.js";
 
 const authRouter = Router();
@@ -8,6 +8,7 @@ authRouter.post("/auth/login", authController.login);
 authRouter.post("/auth/google", authController.googleLogin);
 authRouter.post("/auth/refresh", authController.refresh);
 authRouter.post("/auth/logout", authController.logout);
+authRouter.post("/oauth/token", authController.token);
 
 export {
     authRouter

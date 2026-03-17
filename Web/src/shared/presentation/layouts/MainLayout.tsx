@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogOut, Home, Users } from 'lucide-react';
+import { LogOut, Home, Users, Shield } from 'lucide-react';
 import { useNavigate, Link, Outlet, useLocation } from 'react-router-dom';
 import instance from '../../infrastructure/services/api.service.ts';
 import { useAuth } from '../../infrastructure/contexts/AuthContext';
@@ -42,14 +42,24 @@ const MainLayout: React.FC = () => {
                 </Link>
               </li>
               {role === 'admin' && (
-                <li className="nav-item">
-                  <Link
-                    to="/users"
-                    className={`nav-link d-flex align-items-center gap-2 px-3 rounded-2 transition-all ${isActive('/users') ? 'text-white fw-bold bg-white bg-opacity-10' : 'text-secondary hover-light'}`} >
-                    <Users size={18} />
-                    Users
-                  </Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link
+                      to="/users"
+                      className={`nav-link d-flex align-items-center gap-2 px-3 rounded-2 transition-all ${isActive('/users') ? 'text-white fw-bold bg-white bg-opacity-10' : 'text-secondary hover-light'}`} >
+                      <Users size={18} />
+                      Users
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/appCredentials"
+                      className={`nav-link d-flex align-items-center gap-2 px-3 rounded-2 transition-all ${isActive('/appCredentials') ? 'text-white fw-bold bg-white bg-opacity-10' : 'text-secondary hover-light'}`} >
+                      <Shield size={18} />
+                      App Credentials
+                    </Link>
+                  </li>
+                </>
               )}
             </ul>
           </div>

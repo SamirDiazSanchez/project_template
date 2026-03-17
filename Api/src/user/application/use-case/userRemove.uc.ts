@@ -1,5 +1,5 @@
 import type { IUserRepository } from "@/user/domain/repository-interface/user.repository.interface.js";
-import { UserId } from "@/user/domain/value-object/userId.vo.js";
+import { Uuid } from "@/shared/domain/value-object/uuid.vo.js";
 
 export class UserRemove {
     constructor(
@@ -8,10 +8,10 @@ export class UserRemove {
 
     async run(
         id: string,
-        recorderId: string
+        recordBy: string
     ): Promise<void> {
-        const userId = new UserId(id);
-        const userRecorderId = new UserId(recorderId);
+        const userId = new Uuid(id);
+        const userRecorderId = new Uuid(recordBy);
         await this.userRepository.remove(userId.value, userRecorderId.value);
     }
 }

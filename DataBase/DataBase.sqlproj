@@ -9,6 +9,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="StoreProcedures" />
+    <Folder Include="StoreProcedures\AppCredentials" />
+    <Folder Include="StoreProcedures\Session" />
     <Folder Include="StoreProcedures\User" />
     <Folder Include="Tables" />
   </ItemGroup>

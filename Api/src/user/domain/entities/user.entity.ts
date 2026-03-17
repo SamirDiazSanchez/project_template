@@ -1,27 +1,19 @@
-import type { UserId } from "../value-object/userId.vo.js";
+import type { Uuid } from "@/shared/domain/value-object/uuid.vo.js";
 import type { UserEmail } from "../value-object/userEmail.vo.js";
 import { UserRole } from "../value-object/userRole.vo.js";
 
 export class User {
-    public recorderId?: UserId;
-    public isActive?: boolean
+    public recorderId?: Uuid;
 
     constructor(
-        public readonly userId: UserId,
+        public readonly userId: Uuid,
         public readonly email: UserEmail,
-        public userName: string,
-        public role: UserRole
+        public readonly userName: string,
+        public readonly role: UserRole,
+        public readonly isActive: boolean = true,
     ) { }
 
-    setRecordId(recordId: UserId): void {
+    setRecordId(recordId: Uuid): void {
         this.recorderId = recordId;
-    }
-
-    setIsActive(isActive: boolean): void {
-        this.isActive = isActive;
-    }
-
-    setRole(role: UserRole): void {
-        this.role = role;
     }
 }

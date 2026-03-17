@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import UsersPage from './pages/UsersPage';
+import AppCredentialsPage from './pages/AppCredentialsPage';
 import MainLayout from './shared/presentation/layouts/MainLayout';
 import NotFound from './pages/error/NotFound';
 import Forbidden from './pages/error/Forbidden';
@@ -18,27 +19,28 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/forbidden" element={<Forbidden />} />
-          
-          {/* Authenticated Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              
-              {/* Admin-Only Routes */}
-              <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route path="/users" element={<UsersPage />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/forbidden" element={<Forbidden />} />
+
+            {/* Authenticated Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Admin-Only Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/appCredentials" element={<AppCredentialsPage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
 
-          {/* Catch-all route for Not Found */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+            {/* Catch-all route for Not Found */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </GoogleOAuthProvider>
   );
 }

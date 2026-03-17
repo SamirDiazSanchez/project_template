@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import { User } from "@/user/domain/entities/user.entity.js";
-import { UserId } from "@/user/domain/value-object/userId.vo.js";
+import { Uuid } from "@/shared/domain/value-object/uuid.vo.js";
 import { UserEmail } from "@/user/domain/value-object/userEmail.vo.js";
 import type { IUserRepository } from "@/user/domain/repository-interface/user.repository.interface.js";
 import { UserRole } from "@/user/domain/value-object/userRole.vo.js";
@@ -101,13 +101,13 @@ export class SqliteUserRepository implements IUserRepository {
 
     private mapToUser(row: any): User {
         const user = new User(
-            new UserId(row.userId),
+            new Uuid(row.userId),
             new UserEmail(row.email),
             row.userName,
             new UserRole(row.role)
         );
 
-        if (row.recorderId) user.setRecordId(new UserId(row.recorderId));
+        if (row.recorderId) user.setRecordId(new Uuid(row.recorderId));
 
         return user;
     }

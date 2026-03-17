@@ -74,7 +74,43 @@ export class AuthController {
         }
     }
 
-    async logout(_: Request, res: Response, __: NextFunction) {
+    async token(req: Request, res: Response, _: NextFunction) {
+        if (!req.body || !req.body.client_id || !req.body.client_secret || !req.body.grant_type) {
+            res.status(400).json({ error: "Parameter is required" });
+            return;
+        }
+
+        if (req.body.grant_type !== "client_credentials") {
+            res.status(400).json({ error: "unsupported_grant_type" });
+            return;
+        }
+
+        try {
+            const { accessToken } = await AuthServiceContainer.oauthLogin.run(req.body.client_id, req.body.client_secret);
+
+            sessionService.setSession(res, "token", accessToken, { maxAge: 1000 * 60 * 5 });
+
+            res.status(200).json({
+                access_token: accessToken,
+                token_type: "Bearer",
+                expires_in: 300
+            });
+        } catch (error) {
+            if (error instanceof InvalidCredentialsError) {
+                res.status(401).json({ error: "invalid_client" });
+                return;
+            }
+            throw error;
+        }
+    }
+
+    async logout(req: Request, res: Response, _: NextFunction) {
+        const refreshToken = sessionService.getSession(req, "refreshToken");
+
+        if (refreshToken) {
+            await AuthServiceContainer.logout.run(refreshToken);
+        }
+
         sessionService.clearSession(res, "token");
         sessionService.clearSession(res, "refreshToken");
         res.status(200).json({ message: "Logout successful" });

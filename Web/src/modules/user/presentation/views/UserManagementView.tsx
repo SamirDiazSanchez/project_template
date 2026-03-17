@@ -2,10 +2,10 @@ import { UserPlus } from 'lucide-react';
 import React, { useState } from 'react';
 import { useUsers } from '../hooks/useUsers';
 import type { User } from '../../domain/entities/user.entity';
-import { UserForm } from './UserForm';
-import { UserTable } from './UserTable';
+import { UserForm } from '../components/UserForm';
+import { UserTable } from '../components/UserTable';
 
-export const UserManagement: React.FC = () => {
+export const UserManagementView: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 5;

@@ -43,6 +43,7 @@ BEGIN
       [UpdatedAt]
     FROM [User]
     WHERE [Email] = @Email
+    AND [Role] != 'app'
     AND [IsActive] = 1;
     RETURN;
   END
@@ -75,7 +76,7 @@ BEGIN
     RETURN;
   END
 
-  SET @TotalRecords = (SELECT COUNT(*) FROM [User]);
+  SET @TotalRecords = (SELECT COUNT(*) FROM [User] WHERE [Role] != 'app');
   SELECT
     [UserId],
     [UserName],
@@ -87,6 +88,7 @@ BEGIN
     [UpdatedBy],
     [UpdatedAt]
   FROM [User]
+  WHERE [Role] != 'app'
   ORDER BY [CreatedAt] DESC
   OFFSET (@PageNumber - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY;
 END

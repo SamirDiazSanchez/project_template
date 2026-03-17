@@ -71,10 +71,10 @@ export class UserController {
             return;
         }
 
-        const recorderId = (req as any).userId;
+        const recordBy = (req as any).userId;
 
         try {
-            await UserServiceContainer.save.run(req.body.userId, req.body.name, req.body.email, req.body.role, recorderId);
+            await UserServiceContainer.save.run(req.body.userId, req.body.name, req.body.email, req.body.role, recordBy);
             res.status(201).send();
         } catch (error) {
             throw error;
@@ -88,10 +88,10 @@ export class UserController {
             return;
         }
 
-        const recorderId = (req as any).userId;
+        const recordBy = (req as any).userId;
 
         try {
-            await UserServiceContainer.remove.run(_id, recorderId);
+            await UserServiceContainer.remove.run(_id, recordBy);
             res.status(204).send();
         } catch (error) {
             throw error;

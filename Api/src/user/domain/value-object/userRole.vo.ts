@@ -1,5 +1,5 @@
 export class UserRole {
-    private readonly VALID_ROLES = ["admin", "user"];
+    private readonly VALID_ROLES = ["admin", "user", "app"];
 
     constructor(public value: string) {
         const sanitizedValue = this.sanitize(value);

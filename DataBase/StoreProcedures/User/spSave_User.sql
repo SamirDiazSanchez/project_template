@@ -28,7 +28,7 @@ BEGIN
     RETURN;
   END
 
-  IF EXISTS (SELECT [UserId] FROM [User] WHERE [UserId] = @UserId)
+  IF EXISTS (SELECT 1 FROM [User] WHERE [UserId] = @UserId)
   BEGIN
     BEGIN TRANSACTION
     BEGIN TRY

@@ -1,9 +1,9 @@
 import React from 'react';
-import { UserManagement } from '../modules/user/presentation/components/UserManagement.tsx';
+import { UserManagementView } from '../modules/user/presentation/views/UserManagementView.tsx';
 
 const UsersPage: React.FC = () => {
   return (
-    <UserManagement />
+    <UserManagementView />
   );
 };
 

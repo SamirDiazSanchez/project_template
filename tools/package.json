@@ -1,0 +1,14 @@
+{
+  "name": "project-tools",
+  "version": "1.0.0",
+  "description": "Isolated security and development tools",
+  "type": "module",
+  "scripts": {
+    "security": "tsx security-tool.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,10 @@
+CREATE TABLE [dbo].[Session]
+(
+  [SessionId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+  [UserId] UNIQUEIDENTIFIER NOT NULL,
+  [SessionHash] VARCHAR(64) NOT NULL,
+  [IsActive] BIT NOT NULL,
+  [CreatedAt] DATETIME NOT NULL,
+  [ClosedAt] DATETIME NOT NULL,
+  CONSTRAINT [FK_Session_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User]([UserId])
+)

@@ -1,14 +1,16 @@
-export class UserId {
+import { randomUUID } from "node:crypto";
+
+export class Uuid {
     constructor(public value: string) {
         const sanitizedValue = this.sanitize(value);
         if (!this.validate(sanitizedValue)) {
-            throw new Error('Invalid user id');
+            throw new Error('Invalid uuid');
         }
         this.value = sanitizedValue;
     }
 
-    public static create(): UserId {
-        return new UserId(crypto.randomUUID());
+    public static create(): Uuid {
+        return new Uuid(randomUUID());
     }
 
     private sanitize(value: string): string {

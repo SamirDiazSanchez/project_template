@@ -1,1 +1,5 @@
 d:\Repositories\Template_project\DataBase\bin\Debug\DataBase.dacpac
+d:\Repositories\Template_project\DataBase\obj\Debug\Model.xml
+d:\Repositories\Template_project\DataBase\obj\Debug\refactor.xml
+d:\Repositories\Template_project\DataBase\obj\Debug\postdeploy.sql
+d:\Repositories\Template_project\DataBase\obj\Debug\predeploy.sql

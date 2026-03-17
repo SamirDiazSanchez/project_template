@@ -1,10 +1,10 @@
-import sql from "mssql";
-import { User } from "@/user/domain/entities/user.entity.js";
-import { UserId } from "@/user/domain/value-object/userId.vo.js";
-import { UserEmail } from "@/user/domain/value-object/userEmail.vo.js";
-import type { IUserRepository } from "@/user/domain/repository-interface/user.repository.interface.js";
-import { UserRole } from "@/user/domain/value-object/userRole.vo.js";
+import { Uuid } from "@/shared/domain/value-object/uuid.vo.js";
 import { SqlServerConnection } from "@/shared/infrastructure/database/sqlServer.connection.js";
+import { User } from "@/user/domain/entities/user.entity.js";
+import type { IUserRepository } from "@/user/domain/repository-interface/user.repository.interface.js";
+import { UserEmail } from "@/user/domain/value-object/userEmail.vo.js";
+import { UserRole } from "@/user/domain/value-object/userRole.vo.js";
+import sql from "mssql";
 
 export class SqlServerUserRepository extends SqlServerConnection implements IUserRepository {
     constructor() {
@@ -94,13 +94,12 @@ export class SqlServerUserRepository extends SqlServerConnection implements IUse
 
     private mapToUser(row: any): User {
         const user = new User(
-            new UserId(row.UserId),
+            new Uuid(row.UserId),
             new UserEmail(row.Email),
             row.UserName,
             new UserRole(row.Role),
+            row.IsActive,
         );
-
-        user.setIsActive(row.IsActive);
 
         return user;
     }
