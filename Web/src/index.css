@@ -1,30 +1,65 @@
 :root {
   --primary: #6366f1;
   --primary-hover: #4f46e5;
-  --bg-dark: #0f172a;
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-glass: rgba(255, 255, 255, 0.1);
   --accent: #ec4899;
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Transition for theme switching */
+  --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme='dark'] {
+  --bg-main: #0f172a;
+  --bg-card: rgba(30, 41, 59, 0.7);
+  --text-main: #f8fafc;
+  --text-main-rgb: 248, 250, 252;
+  --text-muted: #94a3b8;
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(15, 23, 42, 0.6);
+  --nav-bg: rgba(15, 23, 42, 0.75);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --gradient-start: #0f172a;
+  --gradient-mid: #111827;
+  --gradient-end: #020617;
+  --table-header-bg: rgba(255, 255, 255, 0.05);
+  --table-row-hover: rgba(255, 255, 255, 0.03);
+  --table-header-text: #cbd5e1; /* Slightly brighter than text-muted for better visibility */
+}
+
+[data-theme='light'] {
+  --bg-main: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --text-main: #1e293b;
+  --text-main-rgb: 30, 41, 59;
+  --text-muted: #64748b;
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --input-bg: #ffffff;
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --gradient-start: #ffffff;
+  --gradient-mid: #f1f5f9;
+  --gradient-end: #f8fafc;
+  --table-header-bg: rgba(0, 0, 0, 0.03);
+  --table-row-hover: rgba(0, 0, 0, 0.01);
+  --table-header-text: #475569;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: var(--theme-transition);
 }
 
 body {
-  background-color: var(--bg-dark);
+  background-color: var(--bg-main);
   color: var(--text-main);
   font-family: var(--font-family);
   min-height: 100vh;
 }
 
 .bg-dark-gradient {
-  background: radial-gradient(ellipse at top left, #0f172a, #111827, #020617);
+  background: radial-gradient(ellipse at top left, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
 }
 
 #root {
@@ -38,7 +73,7 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-glass);
   border-radius: 12px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: var(--card-shadow);
 }
 
 .btn {
@@ -66,10 +101,10 @@ body {
 .input-field {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--input-bg);
   border: 1px solid var(--border-glass);
   border-radius: 8px;
-  color: white;
+  color: var(--text-main);
   outline: none;
   transition: border-color 0.2s;
 }
@@ -100,10 +135,102 @@ h1, h2, h3 {
 }
 
 .hover-light:hover {
-  color: white !important;
+  color: var(--primary) !important;
   opacity: 1;
 }
 
 .hover-danger:hover {
   color: #ef4444 !important;
+}
+
+/* Custom styles for the theme toggle */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--border-glass);
+  color: var(--text-main);
+}
+
+/* Bootstrap Overrides */
+.text-secondary {
+  color: var(--text-muted) !important;
+}
+
+.text-white {
+  color: var(--text-main) !important;
+}
+
+.bg-dark {
+  background-color: var(--bg-main) !important;
+}
+
+.navbar-brand.text-white {
+    color: var(--text-main) !important;
+}
+
+.border-white.border-opacity-10,
+.border-white.border-opacity-5,
+.border-secondary.border-opacity-25 {
+  border-color: var(--border-glass) !important;
+}
+
+/* Specific Table Theme Support */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-hover-bg: var(--table-row-hover);
+  --bs-table-hover-color: var(--text-main);
+  border-color: var(--border-glass);
+}
+
+.table thead {
+  --bs-table-color: var(--table-header-text);
+}
+
+.table tbody {
+  --bs-table-color: var(--text-main);
+}
+
+.table > :not(caption) > * > * {
+  background-color: var(--bs-table-bg);
+  color: var(--bs-table-color) !important;
+  border-bottom-color: var(--border-glass);
+}
+
+.form-control {
+  color: var(--text-main) !important;
+  background-color: var(--input-bg) !important;
+}
+
+.form-control:focus {
+  background-color: var(--input-bg) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+}
+
+.pagination .page-link {
+  background-color: transparent;
+  border-color: var(--border-glass);
+  color: var(--text-muted);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: transparent;
+  opacity: 0.5;
 }

@@ -8,6 +8,7 @@ import NotFound from './pages/error/NotFound';
 import Forbidden from './pages/error/Forbidden';
 import Unauthorized from './pages/error/Unauthorized';
 import { AuthProvider } from './shared/infrastructure/contexts/AuthContext';
+import { ThemeProvider } from './shared/infrastructure/contexts/ThemeContext';
 import ProtectedRoute from './shared/presentation/components/ProtectedRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -16,8 +17,9 @@ function App() {
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <AuthProvider>
-        <Router>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
@@ -41,8 +43,9 @@ function App() {
           </Routes>
         </Router>
       </AuthProvider>
-    </GoogleOAuthProvider>
-  );
+    </ThemeProvider>
+  </GoogleOAuthProvider>
+);
 }
 
 export default App;

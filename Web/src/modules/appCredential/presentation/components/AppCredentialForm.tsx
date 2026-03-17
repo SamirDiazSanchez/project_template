@@ -1,5 +1,5 @@
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { Loader2, RefreshCw, Eye, EyeOff } from 'lucide-react';
 import type { AppCredential } from '../../domain/entities/appCredential.entity.ts';
 
 interface AppCredentialFormProps {

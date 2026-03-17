@@ -1,0 +1,36 @@
+{
+  "login": {
+    "welcome": "Welcome to {{appName}}",
+    "signIn": "Please sign in",
+    "googleSignIn": "Sign in with Google",
+    "error": "Google login failed"
+  },
+  "navbar": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "appCredentials": "App Credentials",
+    "signOut": "Sign out"
+  },
+  "dashboard": {
+    "welcome": "Welcome Dashboard",
+    "subtitle": "System overview and quick statistics.",
+    "users": "Users",
+    "manageUsers": "Manage users"
+  },
+  "users": {
+    "title": "User Management",
+    "totalUsers": "Total Users",
+    "addNew": "Add New User"
+  },
+  "common": {
+    "loading": "Loading...",
+    "noRecords": "No records found.",
+    "actions": "Actions",
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "entries": "entries",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

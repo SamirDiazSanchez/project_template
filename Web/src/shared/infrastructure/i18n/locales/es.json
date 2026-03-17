@@ -1,0 +1,36 @@
+{
+  "login": {
+    "welcome": "Bienvenido a {{appName}}",
+    "signIn": "Por favor inicia sesión",
+    "googleSignIn": "Iniciar sesión con Google",
+    "error": "Error al iniciar sesión con Google"
+  },
+  "navbar": {
+    "dashboard": "Panel de Control",
+    "users": "Usuarios",
+    "appCredentials": "Credenciales de App",
+    "signOut": "Cerrar sesión"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido al Panel de Control",
+    "subtitle": "Información general del sistema y estadísticas rápidas.",
+    "users": "Usuarios",
+    "manageUsers": "Gestionar usuarios"
+  },
+  "users": {
+    "title": "Gestión de Usuarios",
+    "totalUsers": "Total de Usuarios",
+    "addNew": "Agregar Nuevo Usuario"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "noRecords": "No se encontraron registros.",
+    "actions": "Acciones",
+    "showing": "Mostrando",
+    "to": "a",
+    "of": "de",
+    "entries": "entradas",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  }
+}

@@ -4,8 +4,10 @@ import { useUsers } from '../hooks/useUsers';
 import type { User } from '../../domain/entities/user.entity';
 import { UserForm } from '../components/UserForm';
 import { UserTable } from '../components/UserTable';
+import { useTranslation } from 'react-i18next';
 
 export const UserManagementView: React.FC = () => {
+  const { t } = useTranslation();
   const [showForm, setShowForm] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 5;
@@ -28,7 +30,7 @@ export const UserManagementView: React.FC = () => {
         {/* Stats Mini */}
         <div className="col-12 col-md-2">
           <div className="glass-card p-3 border border-white border-opacity-5">
-            <p className="text-secondary small fw-bold text-uppercase tracking-wider mb-1">Total Users</p>
+            <p className="text-secondary small fw-bold text-uppercase tracking-wider mb-1">{t('users.totalUsers')}</p>
             <p className="h3 fw-bold mb-0 text-primary">{totalRecords}</p>
           </div>
         </div>
@@ -38,7 +40,7 @@ export const UserManagementView: React.FC = () => {
             className="btn btn-primary d-inline-flex align-items-center gap-2 px-4 py-2 fw-bold"
             onClick={() => setShowForm(true)} >
             <UserPlus size={20} />
-            Add New User
+            {t('users.addNew')}
           </button>
         </div>
       </div>

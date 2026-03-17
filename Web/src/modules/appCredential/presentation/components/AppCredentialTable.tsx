@@ -68,7 +68,7 @@ export const AppCredentialTable: React.FC<AppCredentialTableProps> = ({
             key: 'clientId',
             render: (app) => (
                 <div className="d-flex align-items-center" style={{ fontSize: '0.75rem' }}>
-                    <span style={{ color: 'var(--bs-secondary)' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>
                         {app.clientId.substring(0, 12)}...
                     </span>
                     <CopyButton text={app.clientId} />
